@@ -2,6 +2,7 @@ import os
 import slidercalc
 import math
 import re
+import codecs
 
 
 class BeatmapParser():
@@ -327,7 +328,7 @@ class BeatmapParser():
         else:
             if not self.osu_section:
                 match = re.match('/^osu file format (v[0-9]+)$/', line)
-                if not match:
+                if match:
                     self.beatmap["fileFormat"] = match.group(1)
 
                 # Apart from events, timingpoints and hitobjects sections, lines are "key: value"
@@ -375,16 +376,18 @@ class BeatmapParser():
 # Parse a .osu file
 # @param  {String}   file  path to the file
 def parseFile(file):
+    print("File:", file) #Debug
     if os.path.isfile(file):
 
         parser = BeatmapParser()
-        buffer = ''
 
-        with open(file, 'r') as file:
-            lines = file.readlines()
-            for line in lines:
+        with codecs.open(file, 'r', encoding="utf-8") as file:
+            line = file.readline()
+            while line :
                 parser.read_line(line)
+                line = file.readline()
 
+            print(parser.beatmap["hitObjects"])
                 # TODO: Add this if needed
                 # Parse a stream containing .osu content
                 # @param  {Stream}   stream
