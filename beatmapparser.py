@@ -353,35 +353,26 @@ class BeatmapParser():
     def build_beatmap(self):
         if "Tags" in self.beatmap:
             self.beatmap["Tags"] = str(self.beatmap["Tags"]).split(" ")
-        print("Tags")  # Debug
 
         for event_line in self.events_lines:
             self.parse_event(event_line)
         self.beatmap["breakTimes"].sort(key=lambda a, b: 1 if a.startTime > b.startTime else -1)
-        print("Events")  # Debug
 
         for timing_line in self.timing_lines:
             self.parse_timing_point(timing_line)
         self.beatmap["timingPoints"].sort(key=lambda a: a['offset'])
-        print("Timingpoints")  # Debug
         timing_points = self.beatmap["timingPoints"]
 
         for i in range(1, len(timing_points)):
             if not "bpm" in timing_points[i]:
                 timing_points[i]["beatLength"] = timing_points[i - 1]["beatLength"]
                 timing_points[i]["bpm"] = timing_points[i - 1]["bpm"]
-        print("Bpm")  # Debug
 
         for object_line in self.object_lines:
             self.parse_hit_object(object_line)
-        print("Hitobjects")  # Debug
         self.beatmap["hitObjects"].sort(key=lambda a: a["startTime"])
-        print("Beatmap sort")  # Debug
         self.compute_max_combo()
-        print("Compute max Combo")  # Debug
         self.compute_duration()
-        print("Compute_duration")  # Debug
-
         return self.beatmap
 
         # return {
@@ -393,7 +384,6 @@ class BeatmapParser():
     # @param  {String}   file  path to the file
 
     def parseFile(self, file):
-        print("File:", file)  # Debug
         if os.path.isfile(file):
 
             with codecs.open(file, 'r', encoding="utf-8") as file:
