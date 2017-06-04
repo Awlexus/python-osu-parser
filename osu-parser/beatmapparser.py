@@ -1,8 +1,10 @@
-import os
-import slidercalc
-import math
-import re
 import codecs
+import math
+import os
+import re
+
+import slidercalc
+
 
 # Translated from JavaScript to Python by Awlex
 

@@ -1,5 +1,7 @@
-from curve import *
 import math
+
+from curve import *
+
 
 # Translated from JavaScript to Python by Awlex
 

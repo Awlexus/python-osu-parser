@@ -1,7 +1,8 @@
-import os
-import beatmapparser
 import datetime
+import os
 from random import shuffle
+
+import beatmapparser
 
 # Created by Awlex
 
