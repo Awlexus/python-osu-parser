@@ -1,6 +1,5 @@
 import math
-
-from osuparser import curve
+from curve import Bezier
 
 
 # Translated from JavaScript to Python by Awlex
@@ -65,6 +64,7 @@ def get_end_point(slider_type, slider_length, points):
             radians *= -1
 
         return rotate(cx, cy, p1[0], p1[1], radians)
+
 
 def point_on_line(p1, p2, length):
     full_length = math.sqrt(math.pow(p2[0] - p1[0], 2) + math.pow(p2[1] - p1[1], 2))

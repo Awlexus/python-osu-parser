@@ -1,5 +1,6 @@
 import math
 
+
 # Translated from JavaScript to Python by Awlex
 
 def is_point_in_circle(point, center, radius):
@@ -19,6 +20,7 @@ def distance_from_points(array):
         distance += distance_points(array[i], array[i - 1])
 
     return distance
+
 
 def angle_from_points(p1, p2):
     return math.atan2(p2[1] - p1[1], p2[0] - p1[0])
@@ -111,7 +113,7 @@ class Bezier:
         self.points = points
         self.order = len(points)
 
-        self.step = (0.0025 / self.order) if self.order > 0 else 1 # // x0.10
+        self.step = (0.0025 / self.order) if self.order > 0 else 1  # // x0.10
         self.pos = {}
         self.calc_points()
 
@@ -147,7 +149,7 @@ class Bezier:
             self.pxlength += distance_points(prev, current)
             prev = current
             i += self.step
-        # ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** *
+            # ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** *
 
     def point_at_distance(self, dist):
         return {
