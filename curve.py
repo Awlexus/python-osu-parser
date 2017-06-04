@@ -1,8 +1,6 @@
 import math
 
-
-# Taken from Osu-Web with some fixes
-# https://github.com/pictuga/osu-web
+# Translated from JavaScript to Python by Awlex
 
 def is_point_in_circle(point, center, radius):
     return distance_points(point, center) <= radius

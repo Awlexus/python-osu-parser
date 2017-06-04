@@ -4,6 +4,7 @@ import math
 import re
 import codecs
 
+# Translated from JavaScript to Python by Awlex
 
 class BeatmapParser():
     def __init__(self):

@@ -1,13 +1,8 @@
 from curve import *
 import math
 
+# Translated from JavaScript to Python by Awlex
 
-# Get the endpoint of a slider
-# @param  {String} sliderType    slider curve type
-# @param  {Float}  sliderLength  slider length
-# @param  {Array}  points        list of slider points
-# @return {Object} endPoint      the coordinates of the slider edge
-#
 def get_end_point(slider_type, slider_length, points):
     if not slider_type or not slider_length or not points:
         return
