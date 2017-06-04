@@ -24,7 +24,7 @@ def distance_from_points(array):
 
 
 def angle_from_points(p1, p2):
-    return math.atan((p2[1] - p1[1]) / (p2[0] - p1[0]))
+    return math.atan2(p2[1] - p1[1], p2[0] - p1[0])
 
 
 def cart_from_pol(r, teta):
@@ -113,7 +113,8 @@ class Bezier:
     def __init__(self, points):
         self.points = points
         self.order = len(points)
-        self.step = 0.0025 / self.order if self.order > 0 else 1 # // x0.10
+
+        self.step = (0.0025 / self.order) if self.order > 0 else 1 # // x0.10
         self.pos = {}
         self.calc_points()
 
@@ -143,6 +144,7 @@ class Bezier:
         prev = self.at(0)
         i = 0
         end = 1 + self.step
+
         while i < end:
             current = self.at(i)
             self.pxlength += distance_points(prev, current)

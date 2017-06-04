@@ -78,7 +78,7 @@ class BeatmapParser():
 
         try:
             timing_point = {
-                "offset": int(members[0]),
+                "offset": int(float(members[0])),
                 "beatLength": float(members[1]),
                 "velocity": 1,
                 "timingSignature": int(members[2]),
@@ -237,7 +237,7 @@ class BeatmapParser():
                 ]
             else:
                 # If endPosition could not be calculated, approximate it by setting it to the last point
-                hit_object.end_position = hit_object["points"][len(hit_object["points"]) - 1]
+                hit_object["end_position"] = hit_object["points"][len(hit_object["points"]) - 1]
 
         else:
             # Unknown
@@ -278,13 +278,13 @@ class BeatmapParser():
 
         total_break_time = 0
 
-        for break_time in self.beatmap["breakTimes"][1]:
+        for break_time in self.beatmap["breakTimes"]:
             total_break_time += (break_time.endTime - break_time.startTime)
 
         if first_object and last_object:
-            self.beatmap["total_time"] = math.floor(last_object.startTime / 1000)
+            self.beatmap["total_time"] = math.floor(last_object["startTime"] / 1000)
             self.beatmap["draining_time"] = math.floor(
-                (last_object.startTime - first_object.startTime - total_break_time) / 1000)
+                (last_object["startTime"] - first_object["startTime"] - total_break_time) / 1000)
         else:
             self.beatmap["total_time"] = 0
             self.beatmap["draining_time"] = 0
@@ -296,30 +296,27 @@ class BeatmapParser():
 
         max_combo = 0
         slider_multiplier = float(self.beatmap["SliderMultiplier"])
-        slider_tick_rate = int(self.beatmap["SliderTickRate"], 10)
+        slider_tick_rate = float(self.beatmap["SliderTickRate"])
 
         timing_points = self.beatmap["timingPoints"]
         current_timing = timing_points[0]
-        next_offset = timing_points[1]["offset"] if timing_points[1] else math.inf
+        next_offset = timing_points[1]["offset"] if len(timing_points) > 1 else math.inf
         i = 1
 
-        for hit_object in self.beatmap["hitObjects"][1]:
-            try:
-                if hit_object["startTime"] >= next_offset:
-                    current_timing = timing_points[i]
-                    i += 1
-                    next_offset = timing_points[i].offset if timing_points[i] else math.inf
-            except Exception as e:
-                raise e
+        for hit_object in self.beatmap["hitObjects"]:
+            if hit_object["startTime"] >= next_offset:
+                current_timing = timing_points[i]
+                i += 1
+                next_offset = timing_points[i]["offsxet"] if i in timing_points else math.inf
 
-            osupx_per_beat = slider_multiplier * 100 * current_timing.velocity
+            osupx_per_beat = slider_multiplier * 100 * current_timing["velocity"]
             tick_length = osupx_per_beat / slider_tick_rate
 
-            if hit_object.objectName == 'spinner' or hit_object.objectName == 'circle':
+            if hit_object["object_name"] == 'spinner' or hit_object["object_name"]== 'circle':
                 max_combo += 1
-            elif hit_object.objectName == 'slider':
-                tick_per_side = math.ceil((math.floor(hit_object.pixelLength / tick_length * 100) / 100) - 1)
-                max_combo += (hit_object.edges.length - 1) * (
+            elif hit_object["object_name"]== 'slider':
+                tick_per_side = math.ceil((math.floor(hit_object["pixelLength"] / tick_length * 100) / 100) - 1)
+                max_combo += (len(hit_object["edges"]) - 1) * (
                     tick_per_side + 1) + 1  # 1 combo for each tick and endpoint
 
         self.beatmap["maxCombo"] = max_combo
@@ -356,34 +353,35 @@ class BeatmapParser():
     def build_beatmap(self):
         if "Tags" in self.beatmap:
             self.beatmap["Tags"] = str(self.beatmap["Tags"]).split(" ")
-        print("Tags") #Debug
+        print("Tags")  # Debug
 
         for event_line in self.events_lines:
             self.parse_event(event_line)
         self.beatmap["breakTimes"].sort(key=lambda a, b: 1 if a.startTime > b.startTime else -1)
-        print("Events") #Debug
+        print("Events")  # Debug
 
         for timing_line in self.timing_lines:
             self.parse_timing_point(timing_line)
         self.beatmap["timingPoints"].sort(key=lambda a: a['offset'])
-        print("Timingpoints") #Debug
+        print("Timingpoints")  # Debug
         timing_points = self.beatmap["timingPoints"]
 
         for i in range(1, len(timing_points)):
             if not "bpm" in timing_points[i]:
                 timing_points[i]["beatLength"] = timing_points[i - 1]["beatLength"]
                 timing_points[i]["bpm"] = timing_points[i - 1]["bpm"]
-        print("Bpm") #Debug
+        print("Bpm")  # Debug
 
         for object_line in self.object_lines:
             self.parse_hit_object(object_line)
-        print("Hitobjects") #Debug
+        print("Hitobjects")  # Debug
         self.beatmap["hitObjects"].sort(key=lambda a: a["startTime"])
-        print("Beatmap sort") #Debug
+        print("Beatmap sort")  # Debug
         self.compute_max_combo()
-        print("Compute max Combo") #Debug
+        print("Compute max Combo")  # Debug
         self.compute_duration()
-        print("Compute_duration") #Debug
+        print("Compute_duration")  # Debug
+
         return self.beatmap
 
         # return {
@@ -403,42 +401,42 @@ class BeatmapParser():
                 while line:
                     self.read_line(line)
                     line = file.readline()
-            # TODO: Add this if needed
-            # Parse a stream containing .osu content
-            # @param  {Stream}   stream
-            # @param  {Function} callback(err, beatmap)
-            # def parseStream(stream, callback):
-            #     parser = beatmapParser()
-            #     buffer = ''
-            #
-            #
-            #     stream.on('data', function (chunk) {
-            #         buffer += chunk.toString()
-            #         var lines = buffer.split(/\r?\n/)
-            #         buffer = lines.pop() || ''
-            #         lines.forEach(parser.readLine)
-            #     })
-            #
-            #     stream.on('error', function (err) {
-            #         callback(err)
-            #     })
-            #
-            #     stream.on('end', function () {
-            #         buffer.split(/\r?\n/).forEach(parser.readLine)
-            #         callback(null, parser.buildBeatmap())
-            #     })
-            # }
-            #
-            # /**
-            #  * Parse the content of a .osu
-            #  * @param  {String|Buffer} content
-            #  * @return {Object} beatmap
-            #  */
-            # exports.parseContent = function (content) {
-            #     var parser = beatmapParser()
-            #     content.toString().split(/[\n\r]+/).forEach(function (line) {
-            #         parser.readLine(line)
-            #     })
-            #
-            #     return parser.buildBeatmap()
-            # }
+                    # TODO: Add this if needed
+                    # Parse a stream containing .osu content
+                    # @param  {Stream}   stream
+                    # @param  {Function} callback(err, beatmap)
+                    # def parseStream(stream, callback):
+                    #     parser = beatmapParser()
+                    #     buffer = ''
+                    #
+                    #
+                    #     stream.on('data', function (chunk) {
+                    #         buffer += chunk.toString()
+                    #         var lines = buffer.split(/\r?\n/)
+                    #         buffer = lines.pop() || ''
+                    #         lines.forEach(parser.readLine)
+                    #     })
+                    #
+                    #     stream.on('error', function (err) {
+                    #         callback(err)
+                    #     })
+                    #
+                    #     stream.on('end', function () {
+                    #         buffer.split(/\r?\n/).forEach(parser.readLine)
+                    #         callback(null, parser.buildBeatmap())
+                    #     })
+                    # }
+                    #
+                    # /**
+                    #  * Parse the content of a .osu
+                    #  * @param  {String|Buffer} content
+                    #  * @return {Object} beatmap
+                    #  */
+                    # exports.parseContent = function (content) {
+                    #     var parser = beatmapParser()
+                    #     content.toString().split(/[\n\r]+/).forEach(function (line) {
+                    #         parser.readLine(line)
+                    #     })
+                    #
+                    #     return parser.buildBeatmap()
+                    # }

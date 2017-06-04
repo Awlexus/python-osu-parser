@@ -12,63 +12,62 @@ def get_end_point(slider_type, slider_length, points):
     if not slider_type or not slider_length or not points:
         return
 
-    return {  # (slider_type)
-        'linear': point_on_line(points[0], points[1], slider_length),
-        'catmull': 'undefined',  # not supported, anyway it's only used in old beatmaps
-        'bezier': bezier(slider_length, points),
-        'pass-through': pass_through(slider_length, points)
-    }.get(slider_type)
-
-
-def pass_through(slider_length, points):
-    if not points or len(points) < 2:
-        return 'undefined'
-
-    if len(points) == 2:
+    if slider_type == 'linear':
         return point_on_line(points[0], points[1], slider_length)
-
-    if len(points) > 3:
-        return get_end_point('bezier', slider_length, points)
-
-    p1 = points[0]
-    p2 = points[1]
-    p3 = points[2]
-    cx, cy, radius = get_circum_circle(p1, p2, p3)
-    radians = slider_length / radius
-    if is_left(p1, p2, p3): radians *= -1
-    return rotate(cx, cy, p1[0], p1[1], radians)
-
-
-def bezier(slider_length, points):
-    global previous
-    if not points or len(points) < 2:
+    elif slider_type == 'catmull':
+        # not supported, anyway, it 's only used in old beatmaps
         return 'undefined'
+    elif slider_type == 'bezier':
+        if not points or len(points) < 2:
+            return 'undefined'
 
-    if len(points) == 2:
-        return point_on_line(points[0], points[1], slider_length)
+        if len(points) == 2:
+            return point_on_line(points[0], points[1], slider_length)
 
-    pts = points[:]
-    l = len(pts)
-    i = 0
-    previous = []
+        pts = points[:]
+        previous = []
+        i = 0
+        l = len(pts)
+        while i < l:
+            point = pts[i]
 
-    while i < l:
-        point = pts[i]
-        if not previous:
+            if not previous:
+                previous = point
+                continue
+
+            if point[0] == previous[0] and point[1] == previous[1]:
+                bezier = Bezier(pts[0:i])
+                pts = pts[i:]
+                slider_length -= bezier.pxlength
+                i = 0
+                l = len(pts)
+
             previous = point
-            continue
-        if point[0] == previous[0] and point[1] == previous[1]:
-            bezier = Bezier(pts[:i])
-            slider_length -= bezier.pxlength
-            i = 0
-            l = len(pts)
+            i += 1
 
-        previous = point
-        i += 1
+        bezier = Bezier(pts)
+        return bezier.point_at_distance(slider_length)
 
-    bezier = Bezier(pts)
-    return bezier.point_at_distance(slider_length)
+    elif slider_type == 'pass-through':
+        if not points or len(points) < 2:
+            return 'undefined'
 
+        if len(points) == 2:
+            return point_on_line(points[0], points[1], slider_length)
+
+        if len(points) > 3:
+            return get_end_point('bezier', slider_length, points)
+
+        p1 = points[0]
+        p2 = points[1]
+        p3 = points[2]
+
+        cx, cy, radius = get_circum_circle(p1, p2, p3)
+        radians = slider_length / radius
+        if is_left(p1, p2, p3):
+            radians *= -1
+
+        return rotate(cx, cy, p1[0], p1[1], radians)
 
 def point_on_line(p1, p2, length):
     full_length = math.sqrt(math.pow(p2[0] - p1[0], 2) + math.pow(p2[1] - p1[1], 2))
@@ -120,17 +119,14 @@ def get_circum_circle(p1, p2, p3):
     x3 = p3[0]
     y3 = p3[1]
 
-    try:
-        # center of circle
-        d = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
+    # center of circle
+    d = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
 
-        ux = ((x1 * x1 + y1 * y1) * (y2 - y3) + (x2 * x2 + y2 * y2) * (y3 - y1) + (x3 * x3 + y3 * y3) * (y1 - y2)) / d
-        uy = ((x1 * x1 + y1 * y1) * (x3 - x2) + (x2 * x2 + y2 * y2) * (x1 - x3) + (x3 * x3 + y3 * y3) * (x2 - x1)) / d
+    ux = ((x1 * x1 + y1 * y1) * (y2 - y3) + (x2 * x2 + y2 * y2) * (y3 - y1) + (x3 * x3 + y3 * y3) * (y1 - y2)) / d
+    uy = ((x1 * x1 + y1 * y1) * (x3 - x2) + (x2 * x2 + y2 * y2) * (x1 - x3) + (x3 * x3 + y3 * y3) * (x2 - x1)) / d
 
-        px = ux - x1
-        py = uy - y1
-    except Exception as e:
-        raise e
+    px = ux - x1
+    py = uy - y1
     r = math.sqrt(px * px + py * py)
 
     return ux, uy, r
