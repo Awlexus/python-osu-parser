@@ -112,15 +112,15 @@ def array_calc(op, array1, array2):
 class Bezier:
     def __init__(self, points):
         self.points = points
-        self.order = points.length
-        self.step = 0.0025 / self.order  # // x0.10
+        self.order = len(points)
+        self.step = 0.0025 / self.order if self.order > 0 else 1 # // x0.10
         self.pos = {}
         self.calc_points()
 
-    def at(self, t):
+    def at(self, t: int):
 
         # B(t) = sum_(i=0) ^ n(iparmisn) (1 - t) ^ (n - i) * t ^ i * P_i
-        if type(self.pos[t] != "undefined"):
+        if t in self.pos:
             return self.pos[t]
 
         x = 0
@@ -141,12 +141,14 @@ class Bezier:
 
         self.pxlength = 0
         prev = self.at(0)
-        for i in range(0, 1 + self.step, step=self.step):
+        i = 0
+        end = 1 + self.step
+        while i < end:
             current = self.at(i)
             self.pxlength += distance_points(prev, current)
             prev = current
-
-            # ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** *
+            i += self.step
+        # ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** *
 
     def point_at_distance(self, dist):
         return {

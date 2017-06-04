@@ -15,7 +15,7 @@ def get_end_point(slider_type, slider_length, points):
     return {  # (slider_type)
         'linear': point_on_line(points[0], points[1], slider_length),
         'catmull': 'undefined',  # not supported, anyway it's only used in old beatmaps
-        'bezier': bezier(slider_type, slider_length, points),
+        'bezier': bezier(slider_length, points),
         'pass-through': pass_through(slider_length, points)
     }.get(slider_type)
 
@@ -39,15 +39,18 @@ def pass_through(slider_length, points):
     return rotate(cx, cy, p1[0], p1[1], radians)
 
 
-def bezier(sliderType, slider_length, points):
+def bezier(slider_length, points):
     global previous
     if not points or len(points) < 2:
         return 'undefined'
 
     if len(points) == 2:
         return point_on_line(points[0], points[1], slider_length)
-    pts = points.slice()
+
+    pts = points[:]
     l = len(pts)
+    i = 0
+    previous = []
 
     while i < l:
         point = pts[i]
@@ -55,7 +58,7 @@ def bezier(sliderType, slider_length, points):
             previous = point
             continue
         if point[0] == previous[0] and point[1] == previous[1]:
-            bezier = Bezier(pts.splice(0, i))
+            bezier = Bezier(pts[:i])
             slider_length -= bezier.pxlength
             i = 0
             l = len(pts)
@@ -117,14 +120,17 @@ def get_circum_circle(p1, p2, p3):
     x3 = p3[0]
     y3 = p3[1]
 
-    # center of circle
-    d = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
+    try:
+        # center of circle
+        d = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
 
-    ux = ((x1 * x1 + y1 * y1) * (y2 - y3) + (x2 * x2 + y2 * y2) * (y3 - y1) + (x3 * x3 + y3 * y3) * (y1 - y2)) / d
-    uy = ((x1 * x1 + y1 * y1) * (x3 - x2) + (x2 * x2 + y2 * y2) * (x1 - x3) + (x3 * x3 + y3 * y3) * (x2 - x1)) / d
+        ux = ((x1 * x1 + y1 * y1) * (y2 - y3) + (x2 * x2 + y2 * y2) * (y3 - y1) + (x3 * x3 + y3 * y3) * (y1 - y2)) / d
+        uy = ((x1 * x1 + y1 * y1) * (x3 - x2) + (x2 * x2 + y2 * y2) * (x1 - x3) + (x3 * x3 + y3 * y3) * (x2 - x1)) / d
 
-    px = ux - x1
-    py = uy - y1
+        px = ux - x1
+        py = uy - y1
+    except Exception as e:
+        raise e
     r = math.sqrt(px * px + py * py)
 
     return ux, uy, r

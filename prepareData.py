@@ -12,7 +12,11 @@ test_data_folder = os.path.join(script_folder, "test_data")
 def prepare_data(mappath: str, outputpath: str):
     # Get .osu files
     files = [x for x in os.listdir(mappath) if x.endswith(".osu")]
-    beatmapparser.parseFile(os.path.join(mappath, files[0]))
+    parser = beatmapparser.BeatmapParser()
+    parser.parseFile(os.path.join(mappath, files[0]))
+    parser.build_beatmap()
+    print("Building done")
+    quit()
     #
     # for file in files:
     #     with open(os.path.join(mappath, file), 'r') as map:
