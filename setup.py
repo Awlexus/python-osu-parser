@@ -7,7 +7,7 @@ setup(
   author = 'Alex Wieser',
   author_email = 'wieseralex580@gmail.com',
   url = 'https://github.com/Awlexus/python-osu-parser',
-  download_url = 'https://github.com/peterldowns/mypackage/archive/0.1.tar.gz', #TODO replace with actual link
+  download_url = 'https://github.com/Awlexus/python-osu-parse/archive/first_release.tar.gz',
   keywords = ['osu', 'parse', 'beatmap'],
   classifiers = [],
 )
