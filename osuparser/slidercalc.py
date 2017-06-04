@@ -1,6 +1,6 @@
 import math
 
-from curve import *
+from osuparser import curve
 
 
 # Translated from JavaScript to Python by Awlex

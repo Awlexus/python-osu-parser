@@ -2,7 +2,7 @@ import datetime
 import os
 from random import shuffle
 
-import beatmapparser
+from osuparser import beatmapparser
 
 # Created by Awlex
 

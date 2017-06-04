@@ -1,0 +1,1 @@
+from osuparser import beatmapparser
