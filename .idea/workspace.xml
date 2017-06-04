@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4044eddb-05c5-461a-b5b3-1bc3b038cbec" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/beatmapparser.py" afterPath="$PROJECT_DIR$/beatmapparser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/curve.py" afterPath="$PROJECT_DIR$/curve.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,8 +30,8 @@
       <file leaf-file-name="beatmapparser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/beatmapparser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="772">
-              <caret line="393" column="0" lean-forward="false" selection-start-line="393" selection-start-column="0" selection-end-line="393" selection-end-column="0" />
+            <state relative-caret-position="17">
+              <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -580,7 +578,14 @@
       <option name="project" value="LOCAL" />
       <updated>1496580328462</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Removed zombie code">
+      <created>1496582851448</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1496582851448</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -630,19 +635,15 @@
     <MESSAGE value="Completed translation" />
     <MESSAGE value="Renamed project, added Tests, removed debug statements" />
     <MESSAGE value="Dokumentation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dokumentation" />
+    <MESSAGE value="Removed zombie code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed zombie code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/beatmapparser.py</url>
-          <line>92</line>
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/beatmapparser.py</url>
-          <line>172</line>
+          <line>169</line>
           <option name="timeStamp" value="52" />
         </line-breakpoint>
       </breakpoints>
@@ -782,8 +783,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/beatmapparser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="772">
-          <caret line="393" column="0" lean-forward="false" selection-start-line="393" selection-start-column="0" selection-end-line="393" selection-end-column="0" />
+        <state relative-caret-position="17">
+          <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>

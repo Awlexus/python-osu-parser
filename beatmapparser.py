@@ -77,20 +77,17 @@ class BeatmapParser():
     def parse_timing_point(self, line):
         members = line.split(',')
 
-        try:
-            timing_point = {
-                "offset": int(float(members[0])),
-                "beatLength": float(members[1]),
-                "velocity": 1,
-                "timingSignature": int(members[2]),
-                "sampleSetId": int(members[3]),
-                "customSampleIndex": int(members[4]),
-                "sampleVolume": int(members[5]),
-                "timingChange": (members[6] == 1),
-                "kiaiTimeActive": (members[7] == 1)
-            }
-        except Exception as e:
-            raise e
+        timing_point = {
+            "offset": int(float(members[0])),
+            "beatLength": float(members[1]),
+            "velocity": 1,
+            "timingSignature": int(members[2]),
+            "sampleSetId": int(members[3]),
+            "customSampleIndex": int(members[4]),
+            "sampleVolume": int(members[5]),
+            "timingChange": (members[6] == 1),
+            "kiaiTimeActive": (members[7] == 1)
+        }
 
         if not math.isnan(timing_point["beatLength"]) and timing_point["beatLength"] != 0:
             if timing_point["beatLength"] > 0:
