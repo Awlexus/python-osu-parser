@@ -3,7 +3,7 @@ import math
 import os
 import re
 
-import slidercalc
+from osuparser import slidercalc
 
 
 # Translated from JavaScript to Python by Awlex
